@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="semantic-finance"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <!-- Pattern includes MDC keys: requestId, sessionId, round -->
+      <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%cyan(${appName})] [%magenta(%X{requestId:--})] [session:%yellow(%X{sessionId:--})] [round:%X{round:--}] %logger{36} — %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Quiet noisy Jena and Spring internals at WARN unless overridden -->
+  <logger name="org.apache.jena"         level="WARN"/>
+  <logger name="org.springframework.web" level="WARN"/>
+  <logger name="org.springframework.boot" level="WARN"/>
+
+  <!-- Application packages -->
+  <logger name="me.johnra.tutorial.finance.semantic" level="INFO"/>
+  <logger name="me.johnra.tutorial.finance.semantic.service.llm" level="INFO"/>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+
+</configuration>

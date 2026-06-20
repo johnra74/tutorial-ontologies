@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: semantic-finance
+
+# LLM provider selection: ollama (default) | openai | anthropic
+llm:
+  provider: ollama
+  model: llama3.1
+
+ollama:
+  base-url: http://10.0.0.27:11434
+
+annotation:
+  max-rounds: 10
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+
+logging:
+  level:
+    me.johnra.tutorial.finance.semantic: INFO

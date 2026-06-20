@@ -1,0 +1,73 @@
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix dpv:   <https://w3id.org/dpv#> .
+@prefix ex:    <https://example.org/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+# Shape 1 — Restricted finance dataset must carry required governance metadata
+ex:RestrictedFinanceDatasetShape a sh:NodeShape ;
+    sh:targetClass dcat:Dataset ;
+
+    sh:property [
+        sh:path dct:conformsTo ;
+        sh:minCount 2 ;
+        sh:message "Must conform to both the CSV-W schema and the metadata profile." ;
+    ] ;
+    sh:property [
+        sh:path dct:license ;
+        sh:minCount 1 ;
+        sh:message "A license IRI is required." ;
+    ] ;
+    sh:property [
+        sh:path dct:accessRights ;
+        sh:minCount 1 ;
+        sh:hasValue <http://publications.europa.eu/resource/authority/access-right/RESTRICTED> ;
+        sh:message "Restricted posture requires RESTRICTED access rights." ;
+    ] ;
+    sh:property [
+        sh:path odrl:hasPolicy ;
+        sh:minCount 1 ;
+        sh:message "An ODRL policy (Agreement) is required." ;
+    ] ;
+    sh:property [
+        sh:path dpv:hasLegalBasis ;
+        sh:minCount 1 ;
+        sh:message "At least one legal basis must be declared." ;
+    ] ;
+    sh:property [
+        sh:path dpv:hasDataController ;
+        sh:minCount 1 ;
+        sh:message "A data controller must be identified." ;
+    ] .
+
+# Shape 2 — Distributions must not expose an open download URL
+ex:NoOpenDownloadShape a sh:NodeShape ;
+    sh:targetClass dcat:Distribution ;
+
+    sh:property [
+        sh:path dcat:downloadURL ;
+        sh:maxCount 0 ;
+        sh:message "Restricted distributions must be served via dcat:accessService, not downloadURL." ;
+    ] ;
+    sh:property [
+        sh:path dcat:accessService ;
+        sh:minCount 1 ;
+        sh:message "A restricted distribution must reference a dcat:DataService." ;
+    ] .
+
+# Shape 3 — Policies must be bilateral Agreements with an identified assignee
+ex:AgreementPolicyShape a sh:NodeShape ;
+    sh:targetObjectsOf odrl:hasPolicy ;
+    sh:class odrl:Agreement ;
+    sh:property [
+        sh:path odrl:assignee ;
+        sh:minCount 1 ;
+        sh:message "Restricted use requires an identified assignee." ;
+    ] .
+
+# Shape 4 — Personal-data categories on columns must also appear on the dataset
+ex:PersonalDataDeclaredShape a sh:NodeShape ;
+    sh:targetObjectsOf dpv:hasPersonalData ;
+    sh:message "Every personal-data category declared on a column must also be declared on the dataset via dpv:hasPersonalData." .
