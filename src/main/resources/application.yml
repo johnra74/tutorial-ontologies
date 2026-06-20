@@ -8,7 +8,7 @@ llm:
   model: llama3.1
 
 ollama:
-  base-url: http://10.0.0.27:11434
+  base-url: http://localhost:11434
 
 annotation:
   max-rounds: 10
